@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36310.24
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__tests__", "__tests__", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{96838F03-7B7E-41D3-8A75-2F9B37B18776}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderMediatR.API", "OrderMediatR.API\OrderMediatR.API.csproj", "{073FC862-3CC5-4D31-B66F-75E37E46C188}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderMediatR.Application", "OrderMediatR.Application\OrderMediatR.Application.csproj", "{E66BE82D-6E92-45E8-BAED-E90933BAE167}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderMediatR.Common", "OrderMediatR.Common\OrderMediatR.Common.csproj", "{A7271FB1-BE1F-4309-B2C8-4BE084CB1B31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderMediatR.Domain", "OrderMediatR.Domain\OrderMediatR.Domain.csproj", "{DA168FE0-50CF-4583-8136-FA4BC79F09B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderMediatR.Infra", "OrderMediatR.Infra\OrderMediatR.Infra.csproj", "{642BE5B5-86E8-4B32-B78E-CCB411D5C53D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{073FC862-3CC5-4D31-B66F-75E37E46C188}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{073FC862-3CC5-4D31-B66F-75E37E46C188}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{073FC862-3CC5-4D31-B66F-75E37E46C188}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{073FC862-3CC5-4D31-B66F-75E37E46C188}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E66BE82D-6E92-45E8-BAED-E90933BAE167}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E66BE82D-6E92-45E8-BAED-E90933BAE167}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E66BE82D-6E92-45E8-BAED-E90933BAE167}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E66BE82D-6E92-45E8-BAED-E90933BAE167}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7271FB1-BE1F-4309-B2C8-4BE084CB1B31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7271FB1-BE1F-4309-B2C8-4BE084CB1B31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7271FB1-BE1F-4309-B2C8-4BE084CB1B31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7271FB1-BE1F-4309-B2C8-4BE084CB1B31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA168FE0-50CF-4583-8136-FA4BC79F09B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA168FE0-50CF-4583-8136-FA4BC79F09B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA168FE0-50CF-4583-8136-FA4BC79F09B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA168FE0-50CF-4583-8136-FA4BC79F09B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{642BE5B5-86E8-4B32-B78E-CCB411D5C53D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{642BE5B5-86E8-4B32-B78E-CCB411D5C53D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{642BE5B5-86E8-4B32-B78E-CCB411D5C53D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{642BE5B5-86E8-4B32-B78E-CCB411D5C53D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{073FC862-3CC5-4D31-B66F-75E37E46C188} = {96838F03-7B7E-41D3-8A75-2F9B37B18776}
+		{E66BE82D-6E92-45E8-BAED-E90933BAE167} = {96838F03-7B7E-41D3-8A75-2F9B37B18776}
+		{A7271FB1-BE1F-4309-B2C8-4BE084CB1B31} = {96838F03-7B7E-41D3-8A75-2F9B37B18776}
+		{DA168FE0-50CF-4583-8136-FA4BC79F09B4} = {96838F03-7B7E-41D3-8A75-2F9B37B18776}
+		{642BE5B5-86E8-4B32-B78E-CCB411D5C53D} = {96838F03-7B7E-41D3-8A75-2F9B37B18776}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A447D973-2DF6-4B22-A031-DCA468932BA8}
+	EndGlobalSection
+EndGlobal

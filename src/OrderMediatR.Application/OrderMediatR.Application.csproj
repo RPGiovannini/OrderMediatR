@@ -15,7 +15,6 @@
   <ItemGroup>
     <ProjectReference Include="..\OrderMediatR.Common\OrderMediatR.Common.csproj" />
     <ProjectReference Include="..\OrderMediatR.Domain\OrderMediatR.Domain.csproj" />
-    <ProjectReference Include="..\OrderMediatR.Infra\OrderMediatR.Infra.csproj" />
   </ItemGroup>
 
 </Project>

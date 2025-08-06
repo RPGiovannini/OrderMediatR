@@ -27,6 +27,7 @@ namespace OrderMediatR.Domain.Entities
         public DateTime? EstimatedDeliveryDate { get; private set; }
         public DateTime? ShippedDate { get; private set; }
         public DateTime? DeliveredDate { get; private set; }
+        public DateTime? CancelledAt { get; private set; }
 
         public Guid CustomerId { get; private set; }
         public Guid? DeliveryAddressId { get; private set; }
@@ -180,6 +181,7 @@ namespace OrderMediatR.Domain.Entities
 
             Status = OrderStatus.Cancelled;
             Notes = reason;
+            CancelledAt = DateTime.UtcNow;
             UpdatedAt = DateTime.UtcNow;
         }
 

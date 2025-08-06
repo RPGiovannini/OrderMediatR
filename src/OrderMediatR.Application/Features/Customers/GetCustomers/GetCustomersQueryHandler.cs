@@ -1,4 +1,5 @@
 using MediatR;
+using OrderMediatR.Application.Interfaces;
 using OrderMediatR.Domain.Entities;
 
 namespace OrderMediatR.Application.Features.Customers.GetCustomers
@@ -34,7 +35,7 @@ namespace OrderMediatR.Application.Features.Customers.GetCustomers
                     LastName = c.LastName,
                     FullName = c.FullName,
                     Email = c.Email.Value,
-                    Phone = c.Phone.Value,
+                    Phone = c.Phone,
                     DocumentNumber = c.DocumentNumber,
                     CreatedAt = c.CreatedAt,
                     TotalOrders = c.TotalOrders
@@ -49,15 +50,5 @@ namespace OrderMediatR.Application.Features.Customers.GetCustomers
         }
     }
 
-    public interface ICustomerRepository
-    {
-        Task<List<Customer>> GetCustomersAsync(
-            string? searchTerm,
-            int page,
-            int pageSize,
-            string? sortBy,
-            bool isDescending
-        );
-        Task<int> GetTotalCountAsync(string? searchTerm);
-    }
+
 }

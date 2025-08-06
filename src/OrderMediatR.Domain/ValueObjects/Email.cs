@@ -30,6 +30,8 @@ namespace OrderMediatR.Domain.ValueObjects
             }
         }
 
+        public static Email Create(string value) => new Email(value);
+
         public static implicit operator string(Email email) => email.Value;
         public static explicit operator Email(string value) => new Email(value);
 

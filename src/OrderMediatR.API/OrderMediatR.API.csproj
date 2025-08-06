@@ -15,15 +15,13 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.7" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\OrderMediatR.Application\OrderMediatR.Application.csproj" />
     <ProjectReference Include="..\OrderMediatR.Common\OrderMediatR.Common.csproj" />
+    <ProjectReference Include="..\OrderMediatR.Infra\OrderMediatR.Infra.csproj" />
   </ItemGroup>
 
 </Project>

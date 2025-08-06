@@ -1,4 +1,5 @@
 using MediatR;
+using OrderMediatR.Application.Interfaces;
 using OrderMediatR.Domain.Entities;
 
 namespace OrderMediatR.Application.Features.Products.GetProducts
@@ -46,7 +47,7 @@ namespace OrderMediatR.Application.Features.Products.GetProducts
                     Name = p.Name,
                     Description = p.Description,
                     Sku = p.Sku.Value,
-                    Price = p.Price.Value,
+                    Price = p.Price.Amount,
                     StockQuantity = p.StockQuantity,
                     Category = p.Category,
                     Brand = p.Brand,
@@ -66,27 +67,5 @@ namespace OrderMediatR.Application.Features.Products.GetProducts
         }
     }
 
-    public interface IProductRepository
-    {
-        Task<List<Product>> GetProductsAsync(
-            string? searchTerm,
-            string? category,
-            string? brand,
-            decimal? minPrice,
-            decimal? maxPrice,
-            bool? isAvailable,
-            int page,
-            int pageSize,
-            string? sortBy,
-            bool isDescending
-        );
-        Task<int> GetTotalCountAsync(
-            string? searchTerm,
-            string? category,
-            string? brand,
-            decimal? minPrice,
-            decimal? maxPrice,
-            bool? isAvailable
-        );
-    }
+
 }

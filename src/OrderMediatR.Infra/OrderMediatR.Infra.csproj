@@ -12,14 +12,18 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.7">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="RabbitMQ.Client" Version="7.1.2" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.6" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\OrderMediatR.Application\OrderMediatR.Application.csproj" />
     <ProjectReference Include="..\OrderMediatR.Common\OrderMediatR.Common.csproj" />
     <ProjectReference Include="..\OrderMediatR.Domain\OrderMediatR.Domain.csproj" />
   </ItemGroup>

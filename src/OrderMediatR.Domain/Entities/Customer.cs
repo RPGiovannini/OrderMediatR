@@ -8,7 +8,7 @@ namespace OrderMediatR.Domain.Entities
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
         public Email Email { get; private set; }
-        public string Phone { get; private set; }
+        public Phone Phone { get; private set; }
         public string? DocumentNumber { get; private set; }
         public DateTime? DateOfBirth { get; private set; }
 
@@ -19,12 +19,13 @@ namespace OrderMediatR.Domain.Entities
         public IReadOnlyCollection<Order> Orders => _orders.AsReadOnly();
 
         public string FullName => $"{FirstName} {LastName}".Trim();
+        public int TotalOrders => _orders.Count;
 
         protected Customer() { }
 
-        public Customer(string firstName, string lastName, Email email, string phone)
+        public Customer(string firstName, string lastName, Email email, Phone phone)
         {
-            ValidateCustomer(firstName, lastName, phone);
+            ValidateCustomer(firstName, lastName, phone?.Value);
 
             FirstName = firstName;
             LastName = lastName;
@@ -32,9 +33,9 @@ namespace OrderMediatR.Domain.Entities
             Phone = phone;
         }
 
-        public void UpdatePersonalInfo(string firstName, string lastName, string phone)
+        public void UpdatePersonalInfo(string firstName, string lastName, Phone phone)
         {
-            ValidateCustomer(firstName, lastName, phone);
+            ValidateCustomer(firstName, lastName, phone?.Value);
 
             FirstName = firstName;
             LastName = lastName;

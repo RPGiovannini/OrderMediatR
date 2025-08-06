@@ -7,7 +7,7 @@ namespace OrderMediatR.Domain.Entities
     {
         public string Name { get; private set; }
         public string Description { get; private set; }
-        public string Sku { get; private set; }
+        public Sku Sku { get; private set; }
         public Money Price { get; private set; }
         public int StockQuantity { get; private set; }
         public string Category { get; private set; }
@@ -21,9 +21,9 @@ namespace OrderMediatR.Domain.Entities
 
         protected Product() { }
 
-        public Product(string name, string description, string sku, Money price, int stockQuantity, string category)
+        public Product(string name, string description, Sku sku, Money price, int stockQuantity, string category)
         {
-            ValidateProduct(name, description, sku, stockQuantity, category);
+            ValidateProduct(name, description, sku?.Value, stockQuantity, category);
 
             Name = name;
             Description = description;

@@ -1,4 +1,5 @@
 using MediatR;
+using OrderMediatR.Application.Interfaces;
 using OrderMediatR.Domain.Entities;
 using OrderMediatR.Domain.ValueObjects;
 
@@ -27,11 +28,9 @@ namespace OrderMediatR.Application.Features.Customers.UpdateCustomer
             customer.UpdatePersonalInfo(
                 request.FirstName,
                 request.LastName,
-                email,
-                phone,
-                request.DocumentNumber,
-                request.DateOfBirth
+                phone
             );
+            customer.UpdateEmail(email);
 
             await _customerRepository.UpdateAsync(customer);
 
@@ -50,9 +49,5 @@ namespace OrderMediatR.Application.Features.Customers.UpdateCustomer
         public NotFoundException(string message) : base(message) { }
     }
 
-    public interface ICustomerRepository
-    {
-        Task<Customer?> GetByIdAsync(Guid id);
-        Task UpdateAsync(Customer customer);
-    }
+
 }

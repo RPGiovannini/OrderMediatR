@@ -19,6 +19,8 @@ namespace OrderMediatR.Domain.ValueObjects
 
         public static Money Zero => new Money(0);
 
+        public static Money Create(decimal amount, string currency = "BRL") => new Money(amount, currency);
+
         public static Money operator +(Money left, Money right)
         {
             if (left.Currency != right.Currency)

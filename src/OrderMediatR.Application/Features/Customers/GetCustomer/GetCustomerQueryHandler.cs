@@ -1,4 +1,5 @@
 using MediatR;
+using OrderMediatR.Application.Interfaces;
 using OrderMediatR.Domain.Entities;
 
 namespace OrderMediatR.Application.Features.Customers.GetCustomer
@@ -54,8 +55,5 @@ namespace OrderMediatR.Application.Features.Customers.GetCustomer
         public NotFoundException(string message) : base(message) { }
     }
 
-    public interface ICustomerRepository
-    {
-        Task<Customer?> GetByIdWithAddressesAsync(Guid id);
-    }
+
 }

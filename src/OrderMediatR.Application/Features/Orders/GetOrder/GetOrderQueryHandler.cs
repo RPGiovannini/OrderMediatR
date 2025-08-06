@@ -1,4 +1,5 @@
 using MediatR;
+using OrderMediatR.Application.Interfaces;
 using OrderMediatR.Domain.Entities;
 
 namespace OrderMediatR.Application.Features.Orders.GetOrder
@@ -25,11 +26,11 @@ namespace OrderMediatR.Application.Features.Orders.GetOrder
                 Id = order.Id,
                 OrderNumber = order.OrderNumber.Value,
                 Status = order.Status.ToString(),
-                Subtotal = order.Subtotal.Value,
-                TaxAmount = order.TaxAmount.Value,
-                ShippingAmount = order.ShippingAmount.Value,
-                DiscountAmount = order.DiscountAmount.Value,
-                TotalAmount = order.TotalAmount.Value,
+                Subtotal = order.Subtotal.Amount,
+                TaxAmount = order.TaxAmount.Amount,
+                ShippingAmount = order.ShippingAmount.Amount,
+                DiscountAmount = order.DiscountAmount.Amount,
+                TotalAmount = order.TotalAmount.Amount,
                 Notes = order.Notes,
                 EstimatedDeliveryDate = order.EstimatedDeliveryDate,
                 ShippedDate = order.ShippedDate,
@@ -73,9 +74,9 @@ namespace OrderMediatR.Application.Features.Orders.GetOrder
                 {
                     Id = oi.Id,
                     Quantity = oi.Quantity,
-                    UnitPrice = oi.UnitPrice.Value,
-                    TotalPrice = oi.TotalPrice.Value,
-                    DiscountAmount = oi.DiscountAmount?.Value,
+                    UnitPrice = oi.UnitPrice.Amount,
+                    TotalPrice = oi.TotalPrice.Amount,
+                    DiscountAmount = oi.DiscountAmount?.Amount,
                     Notes = oi.Notes,
                     Product = new ProductDto
                     {
@@ -88,7 +89,7 @@ namespace OrderMediatR.Application.Features.Orders.GetOrder
                 Payments = order.Payments.Select(p => new PaymentDto
                 {
                     Id = p.Id,
-                    Amount = p.Amount.Value,
+                    Amount = p.Amount,
                     Method = p.Method.ToString(),
                     Status = p.Status.ToString(),
                     TransactionId = p.TransactionId,
@@ -106,8 +107,5 @@ namespace OrderMediatR.Application.Features.Orders.GetOrder
         public NotFoundException(string message) : base(message) { }
     }
 
-    public interface IOrderRepository
-    {
-        Task<Order?> GetByIdWithDetailsAsync(Guid id);
-    }
+
 }

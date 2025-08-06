@@ -1,4 +1,5 @@
 using MediatR;
+using OrderMediatR.Application.Interfaces;
 using OrderMediatR.Domain.Entities;
 
 namespace OrderMediatR.Application.Features.Orders.CancelOrder
@@ -39,9 +40,5 @@ namespace OrderMediatR.Application.Features.Orders.CancelOrder
         public NotFoundException(string message) : base(message) { }
     }
 
-    public interface IOrderRepository
-    {
-        Task<Order?> GetByIdAsync(Guid id);
-        Task UpdateAsync(Order order);
-    }
+
 }

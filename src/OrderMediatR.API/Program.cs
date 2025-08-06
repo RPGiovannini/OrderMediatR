@@ -1,12 +1,17 @@
 using FluentValidation;
 using MediatR;
 using OrderMediatR.Application.Behaviors;
-using OrderMediatR.Application.Validators;
+using OrderMediatR.Application.Features.Customers.CreateCustomer;
+using OrderMediatR.Infra.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+
+// Infrastructure
+builder.Services.AddDataAccess(builder.Configuration);
+builder.Services.AddInfrastructure();
 
 // MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(OrderMediatR.Application.Features.Customers.CreateCustomer.CreateCustomerCommand).Assembly));
@@ -17,15 +22,41 @@ builder.Services.AddValidatorsFromAssembly(typeof(CreateCustomerCommandValidator
 // Pipeline Behaviors
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+// Swagger/OpenAPI
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "OrderMediatR API",
+        Version = "v1",
+        Description = "API para gerenciamento de pedidos usando MediatR e Clean Architecture"
+    });
+
+    // Resolver conflitos de nomes duplicados
+    c.CustomSchemaIds(type =>
+    {
+        var name = type.Name;
+        if (type.Namespace != null)
+        {
+            var parts = type.Namespace.Split('.');
+            if (parts.Length > 2)
+            {
+                // Usa as últimas 2 partes do namespace + nome da classe
+                return $"{parts[^2]}{parts[^1]}{name}";
+            }
+        }
+        return name;
+    });
+});
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

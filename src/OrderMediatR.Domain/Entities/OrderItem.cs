@@ -76,10 +76,10 @@ namespace OrderMediatR.Domain.Entities
         private void CalculateTotalPrice()
         {
             TotalPrice = UnitPrice * Quantity;
-            
-            if (DiscountAmount.HasValue)
+
+            if (DiscountAmount != null)
             {
-                TotalPrice = TotalPrice - DiscountAmount.Value;
+                TotalPrice = TotalPrice - DiscountAmount;
             }
         }
     }

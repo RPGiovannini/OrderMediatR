@@ -1,4 +1,5 @@
 using MediatR;
+using OrderMediatR.Application.Interfaces;
 using OrderMediatR.Domain.Entities;
 using OrderMediatR.Domain.ValueObjects;
 
@@ -18,16 +19,13 @@ namespace OrderMediatR.Application.Features.Products.CreateProduct
             var price = Money.Create(request.Price);
             var sku = Sku.Create(request.Sku);
 
-            var product = Product.Create(
+            var product = new Product(
                 request.Name,
                 request.Description,
                 sku,
                 price,
                 request.StockQuantity,
-                request.Category,
-                request.Brand,
-                request.Weight,
-                request.ImageUrl
+                request.Category
             );
 
             await _productRepository.AddAsync(product);
@@ -37,7 +35,7 @@ namespace OrderMediatR.Application.Features.Products.CreateProduct
                 Id = product.Id,
                 Name = product.Name,
                 Sku = product.Sku.Value,
-                Price = product.Price.Value,
+                Price = product.Price.Amount,
                 StockQuantity = product.StockQuantity,
                 IsAvailable = product.IsAvailable,
                 CreatedAt = product.CreatedAt
@@ -45,8 +43,5 @@ namespace OrderMediatR.Application.Features.Products.CreateProduct
         }
     }
 
-    public interface IProductRepository
-    {
-        Task AddAsync(Product product);
-    }
+
 }

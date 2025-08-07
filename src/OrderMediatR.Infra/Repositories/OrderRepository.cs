@@ -7,22 +7,24 @@ namespace OrderMediatR.Infra.Repositories;
 
 public class OrderRepository : IOrderRepository
 {
-    private readonly OrderMediatRContext _context;
+    private readonly WriteContext _writeContext;
+    private readonly ReadContext _readContext;
 
-    public OrderRepository(OrderMediatRContext context)
+    public OrderRepository(WriteContext writeContext, ReadContext readContext)
     {
-        _context = context;
+        _writeContext = writeContext;
+        _readContext = readContext;
     }
 
     public async Task<Order?> GetByIdAsync(Guid id)
     {
-        return await _context.Orders
+        return await _readContext.Orders
             .FirstOrDefaultAsync(o => o.Id == id);
     }
 
     public async Task<Order?> GetByIdWithDetailsAsync(Guid id)
     {
-        return await _context.Orders
+        return await _readContext.Orders
             .Include(o => o.Customer)
             .Include(o => o.DeliveryAddress)
             .Include(o => o.BillingAddress)
@@ -34,7 +36,7 @@ public class OrderRepository : IOrderRepository
 
     public async Task<List<Order>> GetOrdersAsync(int page, int pageSize)
     {
-        return await _context.Orders
+        return await _readContext.Orders
             .Include(o => o.Customer)
             .OrderByDescending(o => o.CreatedAt)
             .Skip((page - 1) * pageSize)
@@ -44,23 +46,23 @@ public class OrderRepository : IOrderRepository
 
     public async Task AddAsync(Order order)
     {
-        await _context.Orders.AddAsync(order);
-        await _context.SaveChangesAsync();
+        await _writeContext.Orders.AddAsync(order);
+        await _writeContext.SaveChangesAsync();
     }
 
     public async Task UpdateAsync(Order order)
     {
-        _context.Orders.Update(order);
-        await _context.SaveChangesAsync();
+        _writeContext.Orders.Update(order);
+        await _writeContext.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Guid id)
     {
-        var order = await GetByIdAsync(id);
+        var order = await _writeContext.Orders.FirstOrDefaultAsync(o => o.Id == id);
         if (order != null)
         {
-            _context.Orders.Remove(order);
-            await _context.SaveChangesAsync();
+            _writeContext.Orders.Remove(order);
+            await _writeContext.SaveChangesAsync();
         }
     }
 }

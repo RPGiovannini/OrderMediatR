@@ -2,7 +2,7 @@ namespace OrderMediatR.Domain.ValueObjects
 {
     public class OrderNumber
     {
-        public string Value { get; private set; }
+        public string Value { get; set; }
 
         public OrderNumber(string value)
         {
@@ -12,11 +12,20 @@ namespace OrderMediatR.Domain.ValueObjects
             Value = value;
         }
 
+        public OrderNumber()
+        {
+        }
+
         public static OrderNumber Generate()
         {
             var timestamp = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
             var random = new Random().Next(1000, 9999);
             return new OrderNumber($"ORD-{timestamp}-{random}");
+        }
+
+        public static OrderNumber FromValue(string value)
+        {
+            return new OrderNumber(value);
         }
 
         public static implicit operator string(OrderNumber orderNumber) => orderNumber.Value;

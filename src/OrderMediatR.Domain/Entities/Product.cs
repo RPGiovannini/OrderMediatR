@@ -1,4 +1,5 @@
 using OrderMediatR.Common;
+using OrderMediatR.Domain.Events;
 using OrderMediatR.Domain.ValueObjects;
 
 namespace OrderMediatR.Domain.Entities
@@ -31,6 +32,9 @@ namespace OrderMediatR.Domain.Entities
             Price = price;
             StockQuantity = stockQuantity;
             Category = category;
+            
+            // Disparar evento de criação
+            AddDomainEvent(new EntityChangedDomainEvent<Product>(this, "Created"));
         }
 
         public void UpdateBasicInfo(string name, string description, string category)
@@ -40,13 +44,16 @@ namespace OrderMediatR.Domain.Entities
             Name = name;
             Description = description;
             Category = category;
-            UpdatedAt = DateTime.UtcNow;
+            SetUpdatedAt();
+            
+            // Disparar evento de atualização
+            AddDomainEvent(new EntityChangedDomainEvent<Product>(this, "Updated"));
         }
 
         public void UpdatePrice(Money newPrice)
         {
             Price = newPrice;
-            UpdatedAt = DateTime.UtcNow;
+            SetUpdatedAt();
         }
 
         public void UpdateStock(int newQuantity)
@@ -61,7 +68,7 @@ namespace OrderMediatR.Domain.Entities
             else if (!IsAvailable)
                 IsAvailable = true;
 
-            UpdatedAt = DateTime.UtcNow;
+            SetUpdatedAt();
         }
 
         public void AddToStock(int quantity)
@@ -74,7 +81,7 @@ namespace OrderMediatR.Domain.Entities
             if (!IsAvailable)
                 IsAvailable = true;
 
-            UpdatedAt = DateTime.UtcNow;
+            SetUpdatedAt();
         }
 
         public void RemoveFromStock(int quantity)
@@ -90,13 +97,13 @@ namespace OrderMediatR.Domain.Entities
             if (StockQuantity == 0)
                 IsAvailable = false;
 
-            UpdatedAt = DateTime.UtcNow;
+            SetUpdatedAt();
         }
 
         public void SetBrand(string brand)
         {
             Brand = brand;
-            UpdatedAt = DateTime.UtcNow;
+            SetUpdatedAt();
         }
 
         public void SetWeight(decimal weight)
@@ -105,13 +112,13 @@ namespace OrderMediatR.Domain.Entities
                 throw new ArgumentException("Peso não pode ser negativo", nameof(weight));
 
             Weight = weight;
-            UpdatedAt = DateTime.UtcNow;
+            SetUpdatedAt();
         }
 
         public void SetImageUrl(string imageUrl)
         {
             ImageUrl = imageUrl;
-            UpdatedAt = DateTime.UtcNow;
+            SetUpdatedAt();
         }
 
         public void SetAvailability(bool isAvailable)
@@ -120,7 +127,7 @@ namespace OrderMediatR.Domain.Entities
                 throw new InvalidOperationException("Produto com estoque não pode ser marcado como indisponível");
 
             IsAvailable = isAvailable;
-            UpdatedAt = DateTime.UtcNow;
+            SetUpdatedAt();
         }
 
         public bool HasStock(int quantity)
@@ -155,6 +162,69 @@ namespace OrderMediatR.Domain.Entities
 
             if (description.Length < 10)
                 throw new ArgumentException("Descrição deve ter pelo menos 10 caracteres", nameof(description));
+        }
+
+        // Métodos para sincronização (SEM eventos de domínio)
+        public static Product FromSync(
+            Guid id,
+            string name,
+            string description,
+            Sku sku,
+            Money price,
+            int stockQuantity,
+            string category,
+            string? brand,
+            decimal weight,
+            string? imageUrl,
+            bool isAvailable,
+            DateTime createdAt,
+            DateTime? updatedAt,
+            bool isActive)
+        {
+            var product = new Product
+            {
+                Id = id,
+                Name = name,
+                Description = description,
+                Sku = sku,
+                Price = price,
+                StockQuantity = stockQuantity,
+                Category = category,
+                Brand = brand,
+                Weight = weight,
+                ImageUrl = imageUrl,
+                IsAvailable = isAvailable,
+                CreatedAt = createdAt,
+                UpdatedAt = updatedAt,
+                IsActive = isActive
+            };
+            return product;
+        }
+
+        public void UpdateFromSync(
+            string name,
+            string description,
+            Money price,
+            int stockQuantity,
+            string category,
+            string? brand,
+            decimal weight,
+            string? imageUrl,
+            bool isAvailable,
+            DateTime? updatedAt,
+            bool isActive)
+        {
+            Name = name;
+            Description = description;
+            Price = price;
+            StockQuantity = stockQuantity;
+            Category = category;
+            Brand = brand;
+            Weight = weight;
+            ImageUrl = imageUrl;
+            IsAvailable = isAvailable;
+            UpdatedAt = updatedAt;
+            IsActive = isActive;
         }
     }
 }

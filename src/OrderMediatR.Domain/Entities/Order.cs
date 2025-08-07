@@ -1,4 +1,5 @@
 using OrderMediatR.Common;
+using OrderMediatR.Domain.Events;
 using OrderMediatR.Domain.ValueObjects;
 
 namespace OrderMediatR.Domain.Entities
@@ -64,6 +65,9 @@ namespace OrderMediatR.Domain.Entities
             ShippingAmount = Money.Zero;
             DiscountAmount = Money.Zero;
             TotalAmount = Money.Zero;
+
+            // Disparar evento de criação
+            AddDomainEvent(new EntityChangedDomainEvent<Order>(this, "Created"));
         }
 
         public void AddItem(Product product, int quantity)
@@ -142,7 +146,10 @@ namespace OrderMediatR.Domain.Entities
                 throw new InvalidOperationException("Pedido deve ter pelo menos um item");
 
             Status = OrderStatus.Confirmed;
-            UpdatedAt = DateTime.UtcNow;
+            SetUpdatedAt();
+            
+            // Disparar evento de atualização
+            AddDomainEvent(new EntityChangedDomainEvent<Order>(this, "Updated"));
         }
 
         public void Process()
@@ -151,7 +158,7 @@ namespace OrderMediatR.Domain.Entities
                 throw new InvalidOperationException("Pedido deve estar confirmado para ser processado");
 
             Status = OrderStatus.Processing;
-            UpdatedAt = DateTime.UtcNow;
+            SetUpdatedAt();
         }
 
         public void Ship()
@@ -161,7 +168,7 @@ namespace OrderMediatR.Domain.Entities
 
             Status = OrderStatus.Shipped;
             ShippedDate = DateTime.UtcNow;
-            UpdatedAt = DateTime.UtcNow;
+            SetUpdatedAt();
         }
 
         public void Deliver()
@@ -171,7 +178,7 @@ namespace OrderMediatR.Domain.Entities
 
             Status = OrderStatus.Delivered;
             DeliveredDate = DateTime.UtcNow;
-            UpdatedAt = DateTime.UtcNow;
+            SetUpdatedAt();
         }
 
         public void Cancel(string reason = null)
@@ -182,7 +189,10 @@ namespace OrderMediatR.Domain.Entities
             Status = OrderStatus.Cancelled;
             Notes = reason;
             CancelledAt = DateTime.UtcNow;
-            UpdatedAt = DateTime.UtcNow;
+            SetUpdatedAt();
+            
+            // Disparar evento de cancelamento
+            AddDomainEvent(new EntityChangedDomainEvent<Order>(this, "Cancelled"));
         }
 
         public void AddPayment(Payment payment)
@@ -199,20 +209,83 @@ namespace OrderMediatR.Domain.Entities
                 throw new ArgumentException("Data estimada de entrega deve ser no futuro");
 
             EstimatedDeliveryDate = estimatedDeliveryDate;
-            UpdatedAt = DateTime.UtcNow;
+            SetUpdatedAt();
         }
 
         public void UpdateNotes(string notes)
         {
             Notes = notes;
-            UpdatedAt = DateTime.UtcNow;
+            SetUpdatedAt();
         }
 
         private void RecalculateTotals()
         {
             Subtotal = new Money(_orderItems.Sum(item => (decimal)item.TotalPrice));
             TotalAmount = Subtotal + TaxAmount + ShippingAmount - DiscountAmount;
-            UpdatedAt = DateTime.UtcNow;
+            SetUpdatedAt();
+        }
+
+        // Métodos para sincronização (SEM eventos de domínio)
+        public static Order FromSync(
+            Guid id,
+            Guid customerId,
+            OrderNumber orderNumber,
+            OrderStatus status,
+            Money subtotal,
+            Money taxAmount,
+            Money shippingAmount,
+            Money discountAmount,
+            Money totalAmount,
+            DateTime createdAt,
+            DateTime? updatedAt,
+            bool isActive)
+        {
+            var order = new Order
+            {
+                Id = id,
+                CustomerId = customerId,
+                OrderNumber = orderNumber,
+                Status = status,
+                Subtotal = subtotal,
+                TaxAmount = taxAmount,
+                ShippingAmount = shippingAmount,
+                DiscountAmount = discountAmount,
+                TotalAmount = totalAmount,
+                CreatedAt = createdAt,
+                UpdatedAt = updatedAt,
+                IsActive = isActive
+            };
+            return order;
+        }
+
+        public void UpdateFromSync(
+            OrderStatus status,
+            Money subtotal,
+            Money taxAmount,
+            Money shippingAmount,
+            Money discountAmount,
+            Money totalAmount,
+            string? notes,
+            DateTime? estimatedDeliveryDate,
+            DateTime? shippedDate,
+            DateTime? deliveredDate,
+            DateTime? cancelledAt,
+            DateTime? updatedAt,
+            bool isActive)
+        {
+            Status = status;
+            Subtotal = subtotal;
+            TaxAmount = taxAmount;
+            ShippingAmount = shippingAmount;
+            DiscountAmount = discountAmount;
+            TotalAmount = totalAmount;
+            Notes = notes;
+            EstimatedDeliveryDate = estimatedDeliveryDate;
+            ShippedDate = shippedDate;
+            DeliveredDate = deliveredDate;
+            CancelledAt = cancelledAt;
+            UpdatedAt = updatedAt;
+            IsActive = isActive;
         }
     }
 }

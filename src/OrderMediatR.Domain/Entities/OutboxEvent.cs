@@ -40,10 +40,6 @@ namespace OrderMediatR.Domain.Entities
             {
                 eventTypeName = eventType.FullName ?? eventType.Name;
             }
-            
-            // Debug: Log para verificar o tipo
-            Console.WriteLine($"DEBUG: Tipo original: {eventType.FullName}");
-            Console.WriteLine($"DEBUG: Tipo processado: {eventTypeName}");
                 
             var jsonOptions = new JsonSerializerOptions
             {
@@ -53,10 +49,6 @@ namespace OrderMediatR.Domain.Entities
                 DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.Never
             };
             
-            Console.WriteLine($"DEBUG: Tipo do domainEvent: {domainEvent.GetType().FullName}");
-            Console.WriteLine($"DEBUG: Propriedades do domainEvent: {string.Join(", ", domainEvent.GetType().GetProperties().Select(p => p.Name))}");
-            
-            // Tentar serializar manualmente
             var manualJson = new
             {
                 entity = domainEvent.GetType().GetProperty("Entity")?.GetValue(domainEvent),
@@ -65,7 +57,6 @@ namespace OrderMediatR.Domain.Entities
             };
             
             var json = JsonSerializer.Serialize(manualJson, jsonOptions);
-            Console.WriteLine($"DEBUG: JSON serializado manualmente: {json}");
                 
             return new OutboxEvent(
                 eventTypeName,

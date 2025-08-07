@@ -7,16 +7,18 @@ namespace OrderMediatR.Infra.Repositories;
 
 public class ProductRepository : IProductRepository
 {
-    private readonly OrderMediatRContext _context;
+    private readonly WriteContext _writeContext;
+    private readonly ReadContext _readContext;
 
-    public ProductRepository(OrderMediatRContext context)
+    public ProductRepository(WriteContext writeContext, ReadContext readContext)
     {
-        _context = context;
+        _writeContext = writeContext;
+        _readContext = readContext;
     }
 
     public async Task<Product?> GetByIdAsync(Guid id)
     {
-        return await _context.Products
+        return await _readContext.Products
             .FirstOrDefaultAsync(p => p.Id == id);
     }
 
@@ -32,7 +34,7 @@ public class ProductRepository : IProductRepository
         string? sortBy,
         bool isDescending)
     {
-        var query = _context.Products.AsQueryable();
+        var query = _readContext.Products.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
@@ -90,7 +92,7 @@ public class ProductRepository : IProductRepository
         decimal? maxPrice,
         bool? isAvailable)
     {
-        var query = _context.Products.AsQueryable();
+        var query = _readContext.Products.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
@@ -130,23 +132,23 @@ public class ProductRepository : IProductRepository
 
     public async Task AddAsync(Product product)
     {
-        await _context.Products.AddAsync(product);
-        await _context.SaveChangesAsync();
+        await _writeContext.Products.AddAsync(product);
+        await _writeContext.SaveChangesAsync();
     }
 
     public async Task UpdateAsync(Product product)
     {
-        _context.Products.Update(product);
-        await _context.SaveChangesAsync();
+        _writeContext.Products.Update(product);
+        await _writeContext.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Guid id)
     {
-        var product = await GetByIdAsync(id);
+        var product = await _writeContext.Products.FirstOrDefaultAsync(p => p.Id == id);
         if (product != null)
         {
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
+            _writeContext.Products.Remove(product);
+            await _writeContext.SaveChangesAsync();
         }
     }
 }

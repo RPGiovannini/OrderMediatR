@@ -4,7 +4,7 @@ namespace OrderMediatR.Domain.ValueObjects
 {
     public class Phone
     {
-        public string Value { get; private set; }
+        public string Value { get; set; }
 
         public Phone(string value)
         {
@@ -15,6 +15,10 @@ namespace OrderMediatR.Domain.ValueObjects
                 throw new ArgumentException("Telefone inválido", nameof(value));
 
             Value = CleanPhone(value);
+        }
+
+        public Phone()
+        {
         }
 
         public static Phone Create(string value) => new Phone(value);

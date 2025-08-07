@@ -7,22 +7,24 @@ namespace OrderMediatR.Infra.Repositories;
 
 public class CustomerRepository : ICustomerRepository
 {
-    private readonly OrderMediatRContext _context;
+    private readonly WriteContext _writeContext;
+    private readonly ReadContext _readContext;
 
-    public CustomerRepository(OrderMediatRContext context)
+    public CustomerRepository(WriteContext writeContext, ReadContext readContext)
     {
-        _context = context;
+        _writeContext = writeContext;
+        _readContext = readContext;
     }
 
     public async Task<Customer?> GetByIdAsync(Guid id)
     {
-        return await _context.Customers
+        return await _readContext.Customers
             .FirstOrDefaultAsync(c => c.Id == id);
     }
 
     public async Task<Customer?> GetByIdWithAddressesAsync(Guid id)
     {
-        return await _context.Customers
+        return await _readContext.Customers
             .Include(c => c.Addresses)
             .FirstOrDefaultAsync(c => c.Id == id);
     }
@@ -34,7 +36,7 @@ public class CustomerRepository : ICustomerRepository
         string? sortBy,
         bool isDescending)
     {
-        var query = _context.Customers.AsQueryable();
+        var query = _readContext.Customers.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
@@ -61,7 +63,7 @@ public class CustomerRepository : ICustomerRepository
 
     public async Task<int> GetTotalCountAsync(string? searchTerm)
     {
-        var query = _context.Customers.AsQueryable();
+        var query = _readContext.Customers.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
@@ -76,23 +78,23 @@ public class CustomerRepository : ICustomerRepository
 
     public async Task AddAsync(Customer customer)
     {
-        await _context.Customers.AddAsync(customer);
-        await _context.SaveChangesAsync();
+        await _writeContext.Customers.AddAsync(customer);
+        await _writeContext.SaveChangesAsync();
     }
 
     public async Task UpdateAsync(Customer customer)
     {
-        _context.Customers.Update(customer);
-        await _context.SaveChangesAsync();
+        _writeContext.Customers.Update(customer);
+        await _writeContext.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Guid id)
     {
-        var customer = await GetByIdAsync(id);
+        var customer = await _writeContext.Customers.FirstOrDefaultAsync(c => c.Id == id);
         if (customer != null)
         {
-            _context.Customers.Remove(customer);
-            await _context.SaveChangesAsync();
+            _writeContext.Customers.Remove(customer);
+            await _writeContext.SaveChangesAsync();
         }
     }
 }

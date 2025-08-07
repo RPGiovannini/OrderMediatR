@@ -2,7 +2,7 @@ namespace OrderMediatR.Domain.ValueObjects
 {
     public class Sku
     {
-        public string Value { get; private set; }
+        public string Value { get; set; }
 
         public Sku(string value)
         {
@@ -13,6 +13,10 @@ namespace OrderMediatR.Domain.ValueObjects
                 throw new ArgumentException("SKU deve ter entre 3 e 50 caracteres", nameof(value));
 
             Value = value.ToUpperInvariant();
+        }
+
+        public Sku()
+        {
         }
 
         public static Sku Create(string value) => new Sku(value);

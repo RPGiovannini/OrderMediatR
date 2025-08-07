@@ -4,7 +4,7 @@ namespace OrderMediatR.Domain.ValueObjects
 {
     public class Email
     {
-        public string Value { get; private set; }
+        public string Value { get; set; }
 
         public Email(string value)
         {
@@ -15,6 +15,10 @@ namespace OrderMediatR.Domain.ValueObjects
                 throw new ArgumentException("Email inválido", nameof(value));
 
             Value = value.ToLowerInvariant();
+        }
+
+        public Email()
+        {
         }
 
         private static bool IsValidEmail(string email)

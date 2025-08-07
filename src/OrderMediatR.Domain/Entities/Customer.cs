@@ -1,16 +1,17 @@
 using OrderMediatR.Common;
+using OrderMediatR.Domain.Events;
 using OrderMediatR.Domain.ValueObjects;
 
 namespace OrderMediatR.Domain.Entities
 {
     public class Customer : BaseEntity
     {
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
-        public Email Email { get; private set; }
-        public Phone Phone { get; private set; }
-        public string? DocumentNumber { get; private set; }
-        public DateTime? DateOfBirth { get; private set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public Email Email { get; set; }
+        public Phone Phone { get; set; }
+        public string? DocumentNumber { get; set; }
+        public DateTime? DateOfBirth { get; set; }
 
         private readonly List<Address> _addresses = new();
         private readonly List<Order> _orders = new();
@@ -21,7 +22,11 @@ namespace OrderMediatR.Domain.Entities
         public string FullName => $"{FirstName} {LastName}".Trim();
         public int TotalOrders => _orders.Count;
 
-        protected Customer() { }
+        protected Customer() 
+        {
+            _addresses = new List<Address>();
+            _orders = new List<Order>();
+        }
 
         public Customer(string firstName, string lastName, Email email, Phone phone)
         {
@@ -31,6 +36,9 @@ namespace OrderMediatR.Domain.Entities
             LastName = lastName;
             Email = email;
             Phone = phone;
+            
+            // Disparar evento de criação
+            AddDomainEvent(new EntityChangedDomainEvent<Customer>(this, "Created"));
         }
 
         public void UpdatePersonalInfo(string firstName, string lastName, Phone phone)
@@ -40,13 +48,16 @@ namespace OrderMediatR.Domain.Entities
             FirstName = firstName;
             LastName = lastName;
             Phone = phone;
-            UpdatedAt = DateTime.UtcNow;
+            SetUpdatedAt();
+            
+            // Disparar evento de atualização
+            AddDomainEvent(new EntityChangedDomainEvent<Customer>(this, "Updated"));
         }
 
         public void UpdateEmail(Email email)
         {
             Email = email;
-            UpdatedAt = DateTime.UtcNow;
+            SetUpdatedAt();
         }
 
         public void SetDocumentNumber(string documentNumber)
@@ -55,7 +66,7 @@ namespace OrderMediatR.Domain.Entities
                 throw new ArgumentException("Número de documento inválido");
 
             DocumentNumber = documentNumber;
-            UpdatedAt = DateTime.UtcNow;
+            SetUpdatedAt();
         }
 
         public void SetDateOfBirth(DateTime dateOfBirth)
@@ -64,7 +75,7 @@ namespace OrderMediatR.Domain.Entities
                 throw new ArgumentException("Data de nascimento não pode ser no futuro");
 
             DateOfBirth = dateOfBirth;
-            UpdatedAt = DateTime.UtcNow;
+            SetUpdatedAt();
         }
 
         public void AddAddress(Address address)
@@ -120,6 +131,55 @@ namespace OrderMediatR.Domain.Entities
         {
             var cleanDocument = new string(document.Where(char.IsDigit).ToArray());
             return cleanDocument.Length == 11 || cleanDocument.Length == 14;
+        }
+
+        // Métodos para sincronização (SEM eventos de domínio)
+        public static Customer FromSync(
+            Guid id,
+            string firstName,
+            string lastName,
+            Email email,
+            Phone phone,
+            string? documentNumber,
+            DateTime? dateOfBirth,
+            DateTime createdAt,
+            DateTime? updatedAt,
+            bool isActive)
+        {
+            var customer = new Customer
+            {
+                Id = id,
+                FirstName = firstName,
+                LastName = lastName,
+                Email = email,
+                Phone = phone,
+                DocumentNumber = documentNumber,
+                DateOfBirth = dateOfBirth,
+                CreatedAt = createdAt,
+                UpdatedAt = updatedAt,
+                IsActive = isActive
+            };
+            return customer;
+        }
+
+        public void UpdateFromSync(
+            string firstName,
+            string lastName,
+            Email email,
+            Phone phone,
+            string? documentNumber,
+            DateTime? dateOfBirth,
+            DateTime? updatedAt,
+            bool isActive)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+            Phone = phone;
+            DocumentNumber = documentNumber;
+            DateOfBirth = dateOfBirth;
+            UpdatedAt = updatedAt;
+            IsActive = isActive;
         }
     }
 }

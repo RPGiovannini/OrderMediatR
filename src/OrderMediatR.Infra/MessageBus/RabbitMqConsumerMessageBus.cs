@@ -92,7 +92,7 @@ namespace OrderMediatR.Infra.MessageBus
 
             await _channel.BasicConsumeAsync(
                 queue: queue,
-                autoAck: false, // Manual ACK para garantir processamento
+                autoAck: false, 
                 consumer: consumer,
                 cancellationToken: cancellationToken);
 

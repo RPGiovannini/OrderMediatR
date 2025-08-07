@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OrderMediatR.Domain.Entities;
+using OrderMediatR.Infra.EntityConfigurations.ValueObjects;
 
 namespace OrderMediatR.Infra.EntityConfigurations
 {
@@ -29,6 +30,13 @@ namespace OrderMediatR.Infra.EntityConfigurations
                 
             builder.Property(e => e.DeliveryAddressId);
             builder.Property(e => e.BillingAddressId);
+
+            builder.OwnsOne(o => o.OrderNumber, orderNumber => BaseValueObjectConfiguration.ConfigureOrderNumber(orderNumber));
+            builder.OwnsOne(o => o.Subtotal, subtotal => BaseValueObjectConfiguration.ConfigureMoney(subtotal, "Subtotal"));
+            builder.OwnsOne(o => o.TaxAmount, tax => BaseValueObjectConfiguration.ConfigureMoney(tax, "TaxAmount"));
+            builder.OwnsOne(o => o.ShippingAmount, shipping => BaseValueObjectConfiguration.ConfigureMoney(shipping, "ShippingAmount"));
+            builder.OwnsOne(o => o.DiscountAmount, discount => BaseValueObjectConfiguration.ConfigureMoney(discount, "DiscountAmount"));
+            builder.OwnsOne(o => o.TotalAmount, total => BaseValueObjectConfiguration.ConfigureMoney(total, "TotalAmount"));
             
             // Relacionamentos
             builder.HasOne(e => e.Customer)

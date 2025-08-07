@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OrderMediatR.Domain.Entities;
+using OrderMediatR.Infra.EntityConfigurations.ValueObjects;
 
 namespace OrderMediatR.Infra.EntityConfigurations
 {
@@ -40,6 +41,9 @@ namespace OrderMediatR.Infra.EntityConfigurations
                 
             builder.Property(e => e.StockQuantity)
                 .IsRequired();
+
+            builder.OwnsOne(p => p.Price, price => BaseValueObjectConfiguration.ConfigureMoney(price, "Price"));
+            builder.OwnsOne(p => p.Sku, sku => BaseValueObjectConfiguration.ConfigureSku(sku));
             
             // Relacionamentos
             builder.HasMany(e => e.OrderItems)

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OrderMediatR.Domain.Entities;
+using OrderMediatR.Infra.EntityConfigurations.ValueObjects;
 
 namespace OrderMediatR.Infra.EntityConfigurations
 {
@@ -24,6 +25,9 @@ namespace OrderMediatR.Infra.EntityConfigurations
                 .HasMaxLength(20);
                 
             builder.Property(e => e.DateOfBirth);
+
+            builder.OwnsOne(c => c.Email, email => BaseValueObjectConfiguration.ConfigureEmail(email));
+            builder.OwnsOne(c => c.Phone, phone => BaseValueObjectConfiguration.ConfigurePhone(phone));
             
             // Relacionamentos
             builder.HasMany(e => e.Addresses)

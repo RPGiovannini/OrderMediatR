@@ -15,7 +15,7 @@ namespace OrderMediatR.Infra.BackgroundServices
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<OutboxProcessor> _logger;
-        private readonly TimeSpan _processingInterval = TimeSpan.FromSeconds(5);
+        private readonly TimeSpan _processingInterval = TimeSpan.FromSeconds(3600);
         private readonly TimeSpan _errorDelay = TimeSpan.FromSeconds(10);
         private readonly int _batchSize = 50;
 

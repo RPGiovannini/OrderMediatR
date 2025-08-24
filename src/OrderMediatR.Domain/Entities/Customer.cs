@@ -37,7 +37,6 @@ namespace OrderMediatR.Domain.Entities
             Email = email;
             Phone = phone;
             
-            // Disparar evento de criação
             AddDomainEvent(new EntityChangedDomainEvent<Customer>(this, "Created"));
         }
 
@@ -119,12 +118,6 @@ namespace OrderMediatR.Domain.Entities
 
             if (string.IsNullOrWhiteSpace(phone))
                 throw new ArgumentException("Telefone não pode ser vazio", nameof(phone));
-
-            if (firstName.Length < 2)
-                throw new ArgumentException("Nome deve ter pelo menos 2 caracteres", nameof(firstName));
-
-            if (lastName.Length < 2)
-                throw new ArgumentException("Sobrenome deve ter pelo menos 2 caracteres", nameof(lastName));
         }
 
         private static bool IsValidDocument(string document)
@@ -133,7 +126,6 @@ namespace OrderMediatR.Domain.Entities
             return cleanDocument.Length == 11 || cleanDocument.Length == 14;
         }
 
-        // Métodos para sincronização (SEM eventos de domínio)
         public static Customer FromSync(
             Guid id,
             string firstName,

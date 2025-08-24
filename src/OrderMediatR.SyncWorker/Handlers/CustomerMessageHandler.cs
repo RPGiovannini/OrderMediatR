@@ -29,11 +29,9 @@ namespace OrderMediatR.SyncWorker.Handlers
             if (existing == null)
             {
                 await HandleCreate(message, cancellationToken);
+                return;
             }
-            else
-            {
-                await HandleUpdate(message, existing, cancellationToken);
-            }
+            await HandleUpdate(message, existing, cancellationToken);
         }
 
         private async Task HandleCreate(CustomerMessage message, CancellationToken cancellationToken)
@@ -55,7 +53,7 @@ namespace OrderMediatR.SyncWorker.Handlers
 
             await _readContext.Customers.AddAsync(customer, cancellationToken);
             await _readContext.SaveChangesAsync(cancellationToken);
-            
+
             _logger.LogDebug("Cliente criado via sync: {CustomerId}", message.Id);
         }
 
@@ -75,7 +73,7 @@ namespace OrderMediatR.SyncWorker.Handlers
             );
 
             await _readContext.SaveChangesAsync(cancellationToken);
-            
+
             _logger.LogDebug("Cliente atualizado via sync: {CustomerId}", message.Id);
         }
     }
